@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 
 import { InvestmentService } from '../investment.service';
 
@@ -13,7 +13,7 @@ import { InvestmentService } from '../investment.service';
 export class InvestmentResultsComponent {
   private investmentService = inject(InvestmentService);
 
-  get results() {
-    return this.investmentService.resultData;
-  }
+  // 'results' is now a computed readonly signal - makes sure that the data managed by the service cannot be modified from outside the service
+  // results = this.investmentService.resultData.asReadonly(); -  alternative
+  results = computed(() => this.investmentService.resultData());
 }
