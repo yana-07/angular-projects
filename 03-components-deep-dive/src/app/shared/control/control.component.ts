@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, contentChild } from '@angular/core';
+import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, contentChild, AfterContentInit } from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -12,7 +12,7 @@ import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, 
     '(click)': 'onClick()'
   }
 })
-export class ControlComponent {
+export class ControlComponent implements AfterContentInit {
   // @HostBinding('class') className = 'control';
   // @HostListener('click') onClick() {
   //   console.log('clicked!')
@@ -22,6 +22,11 @@ export class ControlComponent {
   // ContentChild and not ContentChildren, as there will be only one input or textarea element injected per ControlComponent
   // @ContentChild('input') private control: ElementRef<HTMLInputElement | HTMLTextAreaElement> | undefined;
   private control = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('input');
+
+  ngAfterContentInit() {
+    console.log('CONTROL COMPONENT AFTER CONTENT INIT');
+    console.log(this.control().nativeElement);
+  }
 
   onClick() {
     console.log(this.el);
