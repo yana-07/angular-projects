@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, contentChild } from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -19,8 +19,12 @@ export class ControlComponent {
   // }
   label = input.required<string>();
   private el = inject(ElementRef); // provides access to the host element rendered to the DOM
+  // ContentChild and not ContentChildren, as there will be only one input or textarea element injected per ControlComponent
+  // @ContentChild('input') private control: ElementRef<HTMLInputElement | HTMLTextAreaElement> | undefined;
+  private control = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('input');
 
   onClick() {
     console.log(this.el);
+    console.log(this.control().nativeElement.value);
   }
 }
