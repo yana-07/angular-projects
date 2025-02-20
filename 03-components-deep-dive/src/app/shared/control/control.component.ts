@@ -1,4 +1,15 @@
-import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, contentChild, AfterContentInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  input,
+  ViewEncapsulation,
+  ContentChild,
+  contentChild,
+  AfterContentInit,
+  afterRender,
+  afterNextRender,
+} from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -9,8 +20,8 @@ import { Component, ElementRef, inject, input, ViewEncapsulation, ContentChild, 
   encapsulation: ViewEncapsulation.None,
   host: {
     class: 'control',
-    '(click)': 'onClick()'
-  }
+    '(click)': 'onClick()',
+  },
 })
 export class ControlComponent implements AfterContentInit {
   // @HostBinding('class') className = 'control';
@@ -21,7 +32,18 @@ export class ControlComponent implements AfterContentInit {
   private el = inject(ElementRef); // provides access to the host element rendered to the DOM
   // ContentChild and not ContentChildren, as there will be only one input or textarea element injected per ControlComponent
   // @ContentChild('input') private control: ElementRef<HTMLInputElement | HTMLTextAreaElement> | undefined;
-  private control = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('input');
+  private control =
+    contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>(
+      'input'
+    );
+
+  constructor() {
+    // the following lifecycle hook will be executed whenever anything changes anywhere in the whole app (not component-bound)
+    afterRender(() => console.log('CONTROL COMPONENT AFTER RENDER'));
+
+    // the following lifecycle hook will be executed only after the next change anywhere in the whole app (not component-bound)
+    afterNextRender(() => console.log('CONTROL COMPONENT AFTER NEXT RENDER'));
+  }
 
   ngAfterContentInit() {
     console.log('CONTROL COMPONENT AFTER CONTENT INIT');
