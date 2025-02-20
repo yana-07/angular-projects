@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonComponent } from '../../../shared/button/button.component';
@@ -12,12 +12,16 @@ import { ControlComponent } from '../../../shared/control/control.component';
   styleUrl: './new-ticket.component.css'
 })
 export class NewTicketComponent {
-  // @ViewChild(ButtonComponent) form: ButtonComponent | undefined; -> directive classes passed as arguments possible
+  // @ViewChild(ButtonComponent) form: ElementRef<ButtonComponent> | undefined; -> directive classes passed as arguments possible
+  // @ViewChildren(ButtonComponent) buttons: ElementRef<ButtonComponent>[] | undefined; 
   // When the component class is instantiated, no component View will exist yet, therefore the initial value will
   // be undefined and will be populated once Angular has initialized the component View
-  @ViewChild('form') form: ElementRef<HTMLFormElement> | undefined; // not a css selector but the name of the template variable without the '#'
+  // @ViewChild('form') private form: ElementRef<HTMLFormElement> | undefined; // not a css selector but the name of the template variable without the '#'
+
+  private form = viewChild.required<ElementRef<HTMLFormElement>>('form');
 
   onSubmit(title: string, ticketText: string) {
-    this.form?.nativeElement.reset();
+    //this.form?.nativeElement.reset();
+    this.form().nativeElement.reset();
   }
 }
