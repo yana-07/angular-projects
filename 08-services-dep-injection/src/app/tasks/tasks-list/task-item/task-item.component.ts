@@ -1,8 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { Task, TaskStatus } from '../../task.model';
-import { TasksService } from '../../tasks.service';
+import { Task, TASK_STATUS_OPTIONS, TaskStatus } from '../../task.model';
 import { TasksServiceToken } from '../../../../main';
 
 @Component({
@@ -14,6 +13,7 @@ import { TasksServiceToken } from '../../../../main';
 })
 export class TaskItemComponent {
   private tasksService = inject(TasksServiceToken);
+  taskStatusOptions = inject(TASK_STATUS_OPTIONS); // since this component is a child of the TasksListComponent, it has access to its element injector, where this injectable is registered
   task = input.required<Task>();
   taskStatus = computed(() => {
     switch (this.task().status) {
