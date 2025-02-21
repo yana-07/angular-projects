@@ -24,8 +24,9 @@ export class AppComponent {
   ];
 
   onReset(index: number) {
-    this.historicTemperatures = this.historicTemperatures.map((temp, idx) =>
-      idx === index ? 18 : temp
-    );
+    this.historicTemperatures[index] = 18;
+    // this.historicTemperatures = this.historicTemperatures.map((temp, idx) =>
+    //   idx === index ? 18 : temp
+    // );
   }
 }
