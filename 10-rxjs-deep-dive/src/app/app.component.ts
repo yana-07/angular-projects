@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
-import { interval, map } from 'rxjs';
+import { interval, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +22,22 @@ export class AppComponent implements OnInit {
   clickCount$ = toObservable(this.clickCount);
   interval$ = interval(1000);
   intervalSignal = toSignal(this.interval$, { initialValue: 0 });
+  customInterval$ = new Observable((subscriber) => {
+    // here we control when the next event will be emitted
+    let timesExecuted = 0;
+    const interval = setInterval(() => {
+      //subscriber.error();
+      if (timesExecuted > 3) {
+        clearInterval(interval);
+        subscriber.complete();
+        return;
+      }
+
+      console.log('Emitting new value...');
+      subscriber.next({ message: 'New value' });
+      timesExecuted++;
+    }, 2000);
+  });
   //interval = signal(0);
   //doubleInterval = computed(() => this.interval() * 2);
 
@@ -34,6 +50,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const subscription = this.clickCount$.subscribe((val) =>
+      // here we define what happens when the next event is emitted
       console.log(`Clicked button ${this.clickCount()} times.`)
     );
     // setInterval(() => {
@@ -49,6 +66,13 @@ export class AppComponent implements OnInit {
     //   });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+
+    const customIntervalSubscription = this.customInterval$.subscribe({
+      next: (val) => console.log(val),
+      complete: () => console.log('completed'),
+      error: () => {} 
+    });
+    this.destroyRef.onDestroy(() => customIntervalSubscription.unsubscribe());
   }
 
   onClick() {
