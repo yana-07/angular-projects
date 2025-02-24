@@ -12,10 +12,10 @@ import { AsyncPipe } from '@angular/common';
 })
 export class MessagesListComponent {// implements OnInit {
   private messagesService = inject(MessagesService);
-  messages$ = this.messagesService.messages$;
+  //messages$ = this.messagesService.messages$;
   // private cdRef = inject(ChangeDetectorRef);
   // private destoyRef = inject(DestroyRef);
-  //messages = this.messagesService.allMessages;
+  messages = this.messagesService.allMessages;
   // get messages() {
   //   return this.messagesService.allMessages;
   // }
