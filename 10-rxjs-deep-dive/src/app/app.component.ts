@@ -1,4 +1,13 @@
-import { Component, DestroyRef, effect, inject, OnInit, signal, computed } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  computed,
+} from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 import { interval, map } from 'rxjs';
 
@@ -8,22 +17,26 @@ import { interval, map } from 'rxjs';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  //private destroyRef = inject(DestroyRef);
+  private destroyRef = inject(DestroyRef);
   clickCount = signal(0);
-  interval = signal(0);
-  doubleInterval = computed(() => this.interval() * 2);
+  clickCount$ = toObservable(this.clickCount);
+  //interval = signal(0);
+  //doubleInterval = computed(() => this.interval() * 2);
 
   constructor() {
-    effect(() => {
-      console.log(`Clicked button ${this.clickCount()} times.`)
-      console.log(this.doubleInterval());
-    });
+    // effect(() => {
+    //   console.log(`Clicked button ${this.clickCount()} times.`)
+    //   console.log(this.doubleInterval());
+    // });
   }
 
   ngOnInit() {
-    setInterval(() => {
-      this.interval.update(prevIntervalNum => prevIntervalNum + 1);
-    }, 1000);
+    const subscription = this.clickCount$.subscribe((val) =>
+      console.log(`Clicked button ${this.clickCount()} times.`)
+    );
+    // setInterval(() => {
+    //   this.interval.update(prevIntervalNum => prevIntervalNum + 1);
+    // }, 1000);
     // at least one subscriber is needed to kick off the interval
     // const subscription = interval(1000)
     //   .pipe(
@@ -33,10 +46,10 @@ export class AppComponent implements OnInit {
     //     next: (val) => console.log(val),
     //   });
 
-    // this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   onClick() {
-    this.clickCount.update(prevCount => prevCount + 1);
+    this.clickCount.update((prevCount) => prevCount + 1);
   }
 }
