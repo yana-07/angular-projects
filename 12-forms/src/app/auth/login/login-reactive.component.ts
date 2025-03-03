@@ -25,6 +25,14 @@ function emailIsUnique(control: AbstractControl) {
   return of({ notUnique: true });
 }
 
+// will not work with server-side pre-rendering
+let initialEmailValue = '';
+const savedForm = window.localStorage.getItem('saved-login-form');
+if (savedForm) {
+  const loadedForm: { email: string } = JSON.parse(savedForm);
+  initialEmailValue = loadedForm.email;
+}
+
 @Component({
   selector: 'app-login-reactive',
   standalone: true,
@@ -36,7 +44,7 @@ export class LoginReactiveComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   form = new FormGroup({
-    email: new FormControl('', {
+    email: new FormControl(initialEmailValue, {
       validators: [Validators.email, Validators.required],
       asyncValidators: [emailIsUnique]
     }),
@@ -52,11 +60,11 @@ export class LoginReactiveComponent implements OnInit {
   ngOnInit() {
     // no need to wait for the template to be rendered for the form to be initialized, 
     // instead it is initialized right from the start
-    const savedForm = window.localStorage.getItem('saved-login-form');
-    if (savedForm) {
-      const loadedForm: { email: string } = JSON.parse(savedForm);
-      this.form.patchValue({ email: loadedForm.email });
-    }
+    // const savedForm = window.localStorage.getItem('saved-login-form');
+    // if (savedForm) {
+    //   const loadedForm: { email: string } = JSON.parse(savedForm);
+    //   this.form.patchValue({ email: loadedForm.email });
+    // }
 
     const subscription = this.form.valueChanges
       .pipe(debounceTime(500))
