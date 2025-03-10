@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet, RouterStateSnapshot } from '@angular/router';
 
 import { UsersService } from '../users.service';
 
@@ -17,7 +17,7 @@ export class UserTasksComponent {
   //userName = '';
   //private usersService = inject(UsersService);
   //userName = computed(() => this.usersService.users.find(u => u.id === this.userId())?.name);
-  //private  activatedRoute = inject(ActivatedRoute);
+  private  activatedRoute = inject(ActivatedRoute);
   //private destroyRef = inject(DestroyRef);
   // @Input({required: true}) set userId(uid: string) {
   //   console.log(uid);
@@ -38,6 +38,10 @@ export class UserTasksComponent {
     // });
 
     // this.destroyRef.onDestroy(() => subscription.unsubscribe());
+
+    const subscription = this.activatedRoute.data.subscribe({
+      next: data => console.log(data)
+    })
   }
 }
 
