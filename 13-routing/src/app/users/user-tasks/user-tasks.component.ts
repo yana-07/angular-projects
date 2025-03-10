@@ -12,6 +12,7 @@ import { UsersService } from '../users.service';
 })
 export class UserTasksComponent {
   userId = input.required<string>();
+  message = input.required<string>();
   //userName = '';
   private usersService = inject(UsersService);
   //private  activatedRoute = inject(ActivatedRoute);
@@ -28,13 +29,14 @@ export class UserTasksComponent {
 
   userName = computed(() => this.usersService.users.find(u => u.id === this.userId())?.name);
 
-  // ngOnInit() {
-  //   const subscription = this.activatedRoute.paramMap.subscribe({
-  //     next: (paramMap) => {
-  //       this.userName = this.usersService.users.find(u => u.id === paramMap.get('userId'))?.name || ''
-  //     },
-  //   });
+  ngOnInit() {
+    console.log(`Input Data: ${this.message()}`)
+    // const subscription = this.activatedRoute.paramMap.subscribe({
+    //   next: (paramMap) => {
+    //     this.userName = this.usersService.users.find(u => u.id === paramMap.get('userId'))?.name || ''
+    //   },
+    // });
 
-  //   this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  // }
+    // this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
 }
