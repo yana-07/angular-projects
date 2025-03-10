@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, Input, input } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { UsersService } from '../users.service';
 
@@ -8,18 +9,31 @@ import { UsersService } from '../users.service';
   templateUrl: './user-tasks.component.html',
   styleUrl: './user-tasks.component.css',
 })
-export class UserTasksComponent {
+export class UserTasksComponent implements OnInit {
+  //userId = input.required<string>();
+  userName = '';
   private usersService = inject(UsersService);
-  userId = input.required<string>();
+  private  activatedRoute = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
   // @Input({required: true}) set userId(uid: string) {
   //   console.log(uid);
   // }
 
-  constructor() {
-    effect(() => {
-      console.log(this.userId());
-    });
-  }
+  // constructor() {
+  //   effect(() => {
+  //     console.log(this.userId());
+  //   });
+  // }
 
-  userName = computed(() => this.usersService.users.find(u => u.id === this.userId())?.name);
+  //userName = computed(() => this.usersService.users.find(u => u.id === this.userId())?.name);
+
+  ngOnInit() {
+    const subscription = this.activatedRoute.paramMap.subscribe({
+      next: (paramMap) => {
+        this.userName = this.usersService.users.find(u => u.id === paramMap.get('userId'))?.name || ''
+      },
+    });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
 }
