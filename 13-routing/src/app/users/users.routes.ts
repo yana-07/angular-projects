@@ -13,7 +13,8 @@ export const routes: Routes = [
     path: 'tasks',
     component: TasksComponent,
     // by default the resolver functions are re-executed if a route parameter changes but not if a query parameter changes
-    runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    // runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+    runGuardsAndResolvers: 'always',
     resolve: {
       userTasks: resolveUserTasks,
     },
