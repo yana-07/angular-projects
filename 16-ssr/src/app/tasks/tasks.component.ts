@@ -14,22 +14,22 @@ import { Task } from './task/task.model';
 })
 export class TasksComponent {
   userId = input.required<string>();
-  userTasks = input.required<Task[]>();
+  //userTasks = input.required<Task[]>();
   order = input<'asc' | 'desc' | undefined>();
   //order?: 'asc' | 'desc';
   // order = signal<'asc' | 'desc'>('desc');
-  // userTasks = computed(() => {
-  //   return this.tasksService.allTasks()
-  //     .filter((t) => t.userId === this.userId())
-  //     .sort((a, b) => {
-  //       if (this.order() === 'asc') {
-  //         return a.id < b.id ? -1 : 1; 
-  //       } else {
-  //         return a.id < b.id ? 1 : -1;
-  //       }
-  //     });
-  // });
-  //private tasksService = inject(TasksService);
+  userTasks = computed(() => {
+    return this.tasksService.allTasks()
+      .filter((t) => t.userId === this.userId())
+      .sort((a, b) => {
+        if (this.order() === 'asc') {
+          return a.id < b.id ? -1 : 1; 
+        } else {
+          return a.id < b.id ? 1 : -1;
+        }
+      });
+  });
+  private tasksService = inject(TasksService);
   //private activatedRoute = inject(ActivatedRoute);
   //private destroyRef = inject(DestroyRef);
 
@@ -44,20 +44,20 @@ export class TasksComponent {
   // }
 }
 
-export const resolveUserTasks: ResolveFn<Task[]> = (
-  activatedRoute: ActivatedRouteSnapshot, 
-  routerState: RouterStateSnapshot
-) => {
-  const tasksService = inject(TasksService);
-  const userId = activatedRoute.paramMap.get('userId');
-  const order = activatedRoute.queryParams['order'];
-  const tasks = tasksService.allTasks().filter(t => t.userId === userId)
+// export const resolveUserTasks: ResolveFn<Task[]> = (
+//   activatedRoute: ActivatedRouteSnapshot, 
+//   routerState: RouterStateSnapshot
+// ) => {
+//   const tasksService = inject(TasksService);
+//   const userId = activatedRoute.paramMap.get('userId');
+//   const order = activatedRoute.queryParams['order'];
+//   const tasks = tasksService.allTasks().filter(t => t.userId === userId)
 
-  if (order === 'asc') {
-    tasks.sort((a, b) => a < b ? -1 : 1);
-  } else {
-    tasks.sort((a, b) => a < b ? 1 : -1);
-  }
+//   if (order === 'asc') {
+//     tasks.sort((a, b) => a < b ? -1 : 1);
+//   } else {
+//     tasks.sort((a, b) => a < b ? 1 : -1);
+//   }
 
-  return tasks.length ? tasks : [];
-}
+//   return tasks.length ? tasks : [];
+// }
